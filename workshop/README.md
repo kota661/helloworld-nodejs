@@ -15,15 +15,20 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
    
 
 ## IKSクラスタの作成
-  IBM Cloud上にKubernetesクラスタを作成します
+  IBM Cloud上にKubernetesクラスタを作成します
 
 1. [IBM Cloud](https://cloud.ibm.com)にログイン
 2. リソースの作成 > Kubernetes Service の順に選択
 3. 標準クラスタ または 無料クラスタを作成
 
     * 選択・入力項目
-      * クラスタ名：mycluster
-      * 地域：
+      * ロケーション: ダラス
+      * クラスター・タイプ: 標準 or 無料
+      * ワーカー・ゾーン: dal10
+      * Kubernetesバージョン: stable
+      * フレーバー: 2コア 4GB RAM
+      * ワーカーノード: 1
+      * クラスタ名: mycluster
     
     * 無料クラスタを選択した場合にお試しいただけない機能
       * Loadbarancer (専用のPublicIP経由でのアプリアクセス)
@@ -60,27 +65,34 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
 ## コンテナレジストリの作成
   専用のプライベートレジストリ空間を作成します。
-  registry.ng.bluemix.net/<my_namespace>/<my_repository>:<my_tag>
+  <地域ごとのレジストリURL>/<名前空間名>/<リポジトリ名>:<タグ名>
 
-1. Container Registry プラグインをインストールします。
+1. リージョンごとのレジストリ名を確認
+
     ```
-    ibmcloud plugin install container-registry -r Bluemix
+    ibmcloud cr info
     ```
 
-2. IBM Cloud上に専用の名前空間を作成します。
+    出力例
+    ```
+    Container Registry                registry.au-syd.bluemix.net
+    Container Registry API endpoint   https://registry.au-syd.bluemix.net/api
+    ...
+    ```
+
+2. IBM Cloud上に専用の名前空間を作成します。
 
     ```
     # 作成
     ibmcloud cr namespace-add <作成したい名前空間名>
 
     # 確認
-    ibmcloud cr namespace-list
+    ibmcloud cr namespace-list
     ```
   
-3. リージョンごとのレジストリ名を確認
 
 
-## サンプルコードを取得
+## サンプルコードを取得
   サンプルコードをダウンロード or git clone してローカルに取得
 
 * ブラウザ経由でダウンロード
@@ -107,7 +119,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
     ```
     # docker build
-    # docker build -t <リポジトリ名>:<タグ名> .
+    # docker build -t <リポジトリ名>:<タグ名> .
     docker build -t registry.ng.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest .
 
     # build結果の確認
@@ -124,13 +136,13 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     docker ps 
     ```
 
-    * Optional
+    * Optional
       * 実行中のコンテナの状態を確認
-          `docker inspect <CONTAINER>`
-      * 実行中のコンテナに入って操作
-          `docker exec -it <CONTAINER> /bash`
+          `docker inspect <CONTAINER>`
+      * 実行中のコンテナに入って操作
+          `docker exec -it <CONTAINER> /bash`
 
-4. ブラウザでアプリにアクセス
+4. ブラウザでアプリにアクセス
     [helloworld-nodejs](http://localhost:80)
 
 5. 実行中のコンテナの停止
@@ -141,7 +153,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     # docker stop でコンテナを停止させる
     docker stop <コンテナID>
     
-    # docker ps --all で停止したことの確認
+    # docker ps --all で停止したことの確認
     docker ps --all
 
     # option: 停止したコンテナの削除
@@ -171,10 +183,10 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     ```
 
 
-## Kubernetesクラスタへアプリをデプロイ
-  deployment.yml, service.ymlを使ってアプリをデプロイします
+## Kubernetesクラスタへアプリをデプロイ
+  deployment.yml, service.ymlを使ってアプリをデプロイします
 
-1. deployment.ymlをエディタで開いてイメージ名を先程Pushしたイメージ名に変更
+1. deployment.ymlをエディタで開いてイメージ名を先程Pushしたイメージ名に変更
 
     * 変更前: 
         kota661/helloworld-nodejs:latest
@@ -240,7 +252,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
    
     http://<Worker NodeのPublicIP>:31000
 
-    上記出力例の場合は　http://173.193.122.126:31000　です
+    上記出力例の場合は http://173.193.122.126:31000 です
 
 
 ## サービス公開しアプリにアクセスしてみよう - Ingress
@@ -252,12 +264,11 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     ```
 
     出力例
-
     ```
     Name:                   mycluster
     ...
-    Ingress Subdomain:      mycluster.jp-tok.containers.appdomain.cloud
-    Ingress Secret:         mycluster
+    Ingress Subdomain:      mycluster-417610.us-south.containers.appdomain.cloud
+    Ingress Secret:         mycluster-417610
     Workers:                2
     ...
     ```
@@ -268,10 +279,10 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     * 変更前: 
         host: dev.mycluster.jp-tok.containers.appdomain.cloud
     * 変更後: 
-        host: dev.mycluster.jp-tok.containers.appdomain.cloud
+        host: dev.mycluster-417610.us-south.containers.appdomain.cloud
         
 
-    ```:service-ingress.yml
+    ```:service-ingress.yml
     apiVersion: extensions/v1beta1
     kind: Ingress
     metadata:
@@ -298,7 +309,12 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
 4. アプリにアクセス
 
+    ```
     https://dev.<Ingress Subdomain>
+
+    # 上記入力例の場合
+    https://dev.mycluster-417610.us-south.containers.appdomain.cloud
+    ```
 
 
 ## お片付け
@@ -310,7 +326,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
     * リソースを削除する場合
         ```
-        kubectl delete deploy/hello-nodejs-deployment,svc/hello-nodejs-npservice,svc/hello-nodejs-service,svc/hello-nodejs-ingressre
+        kubectl delete deploy/hello-nodejs-deployment svc/hello-nodejs-npservice svc/hello-nodejs-service svc/hello-nodejs-ingressre
         ```
 
 2. コンテナレジストリのImage削除
