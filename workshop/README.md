@@ -60,7 +60,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
 ## コンテナレジストリの作成
   専用のプライベートレジストリ空間を作成します。
-  registry.bluemix.net/<my_namespace>/<my_repository>:<my_tag>
+  registry.ng.bluemix.net/<my_namespace>/<my_repository>:<my_tag>
 
 1. Container Registry プラグインをインストールします。
     ```
@@ -108,7 +108,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     ```
     # docker build
     # docker build -t <リポジトリ名>:<タグ名> .
-    docker build -t registry.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest .
+    docker build -t registry.ng.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest .
 
     # build結果の確認
     docker images
@@ -118,7 +118,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
     ```
     # docker run でコンテナ実行
-    docker run -d -p 80:80 registry.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
+    docker run -d -p 80:80 registry.ng.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
 
     # docker ps で実行ステータスの確認
     docker ps 
@@ -161,7 +161,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 2. docker push でプライベートレジストリにイメージをPush
 
     ```
-    docker push registry.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
+    docker push registry.ng.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
     ```
 
 3. ibmcloud cr images でPushできたことを確認
@@ -179,7 +179,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
     * 変更前: 
         kota661/helloworld-nodejs:latest
     * 変更後: 
-        registry.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
+        registry.ng.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
    
     ```:deployment.yml
     apiVersion: apps/v1
@@ -315,7 +315,7 @@ https://cloud.ibm.com/docs/containers/container_index.html#container_index
 
 2. コンテナレジストリのImage削除
     ```
-    ibmcloud cr image-rm registry.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
+    ibmcloud cr image-rm registry.ng.bluemix.net/<作成した名前空間名>/helloworld-nodejs:latest
     ```
 
 
