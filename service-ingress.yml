@@ -1,3 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-nodejs-service
+spec:
+  selector:
+    app: hello-nodejs
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+---
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -8,10 +20,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - dev.app.mycluster.jp-tok.containers.appdomain.cloud # ibmcloud ks cluster-get mycluster --json | jq '.ingressHostname'
+    - dev.mycluster.jp-tok.containers.appdomain.cloud # ibmcloud ks cluster-get mycluster --json | jq '.ingressHostname'
     secretName: mycluster # ibmcloud ks cluster-get mycluster --json | jq '.ingressSecretName'
   rules:
-  - host: dev.app.mycluster.jp-tok.containers.appdomain.cloud
+  - host: dev.mycluster.jp-tok.containers.appdomain.cloud
     http:
       paths:
       - path: /

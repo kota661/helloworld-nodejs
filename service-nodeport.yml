@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-nodejs-service
+  name: hello-nodejs-npservice
 spec:
   selector:
     app: hello-nodejs
