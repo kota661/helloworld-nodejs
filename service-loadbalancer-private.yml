@@ -4,6 +4,8 @@ metadata:
   name: hello-nodejs-lbservice
   labels:
     app: hello-nodejs
+  #annotations:
+  #  service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: private
 spec:
   selector:
     app: hello-nodejs

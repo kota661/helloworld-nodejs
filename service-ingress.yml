@@ -1,32 +1,28 @@
-apiVersion: v1
-kind: Service
-metadata:
-  name: hello-nodejs-service
-spec:
-  selector:
-    app: hello-nodejs
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
----
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: hello-nodejs-ingressre
+  labels:
+    app: hello-nodejs
   annotations:
-    # ingress.bluemix.net/rewrite-path: "serviceName=<service_name1> rewrite=<target_path1>;serviceName=<service_name2> rewrite=<target_path2>"
+    # ingress.bluemix.net/rewrite-path: "serviceName=hello-nodejs rewrite=/;serviceName=pacman rewrite=/"
+    ingress.bluemix.net/rewrite-path: "serviceName=pacman rewrite=/"
     # ex) ingress.bluemix.net/rewrite-path: "serviceName=app rewrite=/"
+    # ingress.bluemix.net/redirect-to-https: "True" 
 spec:
   tls:
   - hosts:
-    - dev.mycluster.jp-tok.containers.appdomain.cloud # ibmcloud ks cluster-get mycluster --json | jq '.ingressHostname'
-    secretName: mycluster # ibmcloud ks cluster-get mycluster --json | jq '.ingressSecretName'
+    - dev.sato-cluster.jp-tok.containers.appdomain.cloud # ibmcloud ks cluster-get mycluster --json | jq '.ingressHostname'
+    secretName: sato-cluster # ibmcloud ks cluster-get mycluster --json | jq '.ingressSecretName'
   rules:
-  - host: dev.mycluster.jp-tok.containers.appdomain.cloud
+  - host: dev.sato-cluster.jp-tok.containers.appdomain.cloud
     http:
       paths:
       - path: /
         backend:
-          serviceName: hello-nodejs-service
+          serviceName: hello-nodejs
+          servicePort: 80
+      - path: /pacman
+        backend:
+          serviceName: pacman
           servicePort: 80

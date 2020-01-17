@@ -16,6 +16,14 @@ spec:
     spec:
       containers:
       - name: hello-nodejs
-        image: kota661/helloworld-nodejs:latest
+        # image: kota661/helloworld-nodejs:latest
+        image: jp.icr.io/kota/helloworld-nodejs:latest
         ports:
         - containerPort: 80
+        resources:
+          # limits:
+          #   cpu: "200m"
+          #   memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"

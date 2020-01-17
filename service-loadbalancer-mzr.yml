@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+ name: hello-nodejs-lbservice-tok02
+ annotations:
+   service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+   service.kubernetes.io/ibm-load-balancer-cloud-provider-zone: "tok02"
+   service.kubernetes.io/ibm-load-balancer-cloud-provider-vlan: "2513625"
+spec:
+  selector:
+    app: hello-nodejs
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: hello-nodejs-lbservice-tok04
+ annotations:
+   service.kubernetes.io/ibm-load-balancer-cloud-provider-ip-type: public
+   service.kubernetes.io/ibm-load-balancer-cloud-provider-zone: "tok04"
+   service.kubernetes.io/ibm-load-balancer-cloud-provider-vlan: "2497939"
+spec:
+  selector:
+    app: hello-nodejs
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80

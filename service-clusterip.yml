@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: hello-nodejs-lbservice
+  name: hello-nodejs
   labels:
     app: hello-nodejs
 spec:
   selector:
     app: hello-nodejs
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - protocol: TCP
     port: 80
-    # targetPort: 9376
+    targetPort: 80
